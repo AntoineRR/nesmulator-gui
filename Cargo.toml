@@ -1,0 +1,24 @@
+[package]
+name = "nesmulator-gui"
+version = "0.1.0"
+edition = "2021"
+authors = ["aromeroromero"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+winit = "0.26.0"
+winit_input_helper = "0.11.0"
+pixels = "0.9.0"
+log = "0.4.14"
+env_logger = "0.8.2"
+clap = "3.0.14"
+sdl2 = "0.35.1"
+spin_sleep = "1.0.0"
+nesmulator_core = { git = "https://github.com/AntoineRR/nesmulator-core" }
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+debug = true
