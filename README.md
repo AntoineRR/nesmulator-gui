@@ -1,6 +1,6 @@
 # Nesmulator GUI
 
-This project is an example of how to handle a GUI with the (nesmulator-core)[https://github.com/AntoineRR/nesmulator-core] crate.
+This project is an example of how to handle a GUI with the [nesmulator-core](https://github.com/AntoineRR/nesmulator-core) crate.
 
 ## Current features
 
