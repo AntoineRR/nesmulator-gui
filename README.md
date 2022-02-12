@@ -7,7 +7,7 @@ This project is an example of how to handle a GUI with the (nesmulator-core)[htt
 * [X] Display the game screen
 * [X] A debugging view (display of pattern tables and palette) can be toggled
 * [X] First Controller mapping for keyboard
-* [X] CLI with various flags
+* [X] CLI with various flags (see below)
 
 The GUI is created using [winit](https://github.com/rust-windowing/winit) and [pixels](https://github.com/parasyte/pixels).
 The sound is handled by [sdl2](https://github.com/Rust-SDL2/rust-sdl2).
@@ -27,6 +27,18 @@ To display the available options:
 
 ```
 $ cargo run --release --help
+USAGE:
+    nesmulator-gui [OPTIONS] <FILE>
+
+ARGS:
+    <FILE>    Sets the nes file to run in the emulator
+
+OPTIONS:
+    -d, --debug <INT>       Turn debugging information on
+    -h, --help              Print help information
+    -l, --log               Display the CPU logs to the console
+    -p, --palette <FILE>    Sets a palette from a .pal file
+    -V, --version           Print version information
 ```
 
 ## Controls
@@ -51,3 +63,9 @@ $ cargo run --release --help
 | Debugging mode       | E          |
 | Choose debug palette | Left/Right |
 | Reset CPU            | R          |
+
+## To do
+
+* Add a configuration file
+* Improve sound quality
+* Map controls to speed up emulation

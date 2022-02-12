@@ -1,17 +1,16 @@
 use std::error::Error;
 
-use winit::window::{Window, WindowBuilder};
+use nesmulator_core::utils::ARGBColor;
+use pixels::{Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
 use winit::event_loop::EventLoop;
-use pixels::{Pixels, SurfaceTexture};
-
-use nesmulator_core::utils::ARGBColor;
+use winit::window::{Window, WindowBuilder};
 
 const MAIN_WINDOW_WIDTH: u32 = 256;
-pub const MAIN_WINDOW_HEIGHT: u32 = 240;
+const MAIN_WINDOW_HEIGHT: u32 = 240;
 
-pub const DEBUG_WINDOW_WIDTH: u32 = 256;
-pub const DEBUG_WINDOW_HEIGHT: u32 = 240 + 2 + 128 + 2 + 6; // From top to bottom: main window | pattern table | palette
+const DEBUG_WINDOW_WIDTH: u32 = 256;
+const DEBUG_WINDOW_HEIGHT: u32 = 240 + 2 + 128 + 2 + 6; // From top to bottom: main window | pattern table | palette
 
 #[derive(Debug)]
 pub struct GUI {
