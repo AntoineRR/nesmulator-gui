@@ -70,6 +70,7 @@ fn main() {
 
     // Run the event loop
     let mut palette_id = 0;
+    let mut speed = 1.0;
     let mut input_helper = WinitInputHelper::new();
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
@@ -118,6 +119,14 @@ fn main() {
                     palette_id += 1;
                 }
                 send_message(&tx, Message::ChangePaletteId(palette_id), control_flow);
+            }
+            if input_helper.key_pressed(VirtualKeyCode::Up) {
+                speed += 0.5;
+                send_message(&tx, Message::ChangeEmulationSpeed(speed), control_flow);
+            }
+            if input_helper.key_pressed(VirtualKeyCode::Down) {
+                speed -= 0.5;
+                send_message(&tx, Message::ChangeEmulationSpeed(speed), control_flow);
             }
             // Controller inputs
             let mut input = 0;

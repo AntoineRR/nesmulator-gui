@@ -1,7 +1,7 @@
-use std::process::exit;
 use std::sync::mpsc::Receiver;
 use std::thread;
 use std::time::Instant;
+use std::{process::exit, time::Duration};
 
 use env_logger::Env;
 use log::{error, info, warn};
@@ -23,6 +23,7 @@ pub enum Message {
     Reset,
     DrawFrame,
     ChangePaletteId(u8),
+    ChangeEmulationSpeed(f64),
     ResizeWindow(u32, u32),
     ToggleDebugWindow,
     CloseApp,
@@ -103,7 +104,7 @@ fn run_nes(nes: &mut NES, gui: &mut Gui, rx: Receiver<Message>) {
         .unwrap();
     queue.resume();
 
-    let target_time = nes.get_one_frame_duration();
+    let mut target_time = nes.get_one_frame_duration();
     let mut time = Instant::now();
 
     loop {
@@ -112,7 +113,7 @@ fn run_nes(nes: &mut NES, gui: &mut Gui, rx: Receiver<Message>) {
 
         // Handle message from the main thread
         if let Ok(m) = rx.try_recv() {
-            let keep_running = handle_message(nes, gui, m);
+            let keep_running = handle_message(nes, gui, &mut target_time, m);
             if !keep_running {
                 break;
             }
@@ -148,7 +149,12 @@ fn run_nes(nes: &mut NES, gui: &mut Gui, rx: Receiver<Message>) {
     }
 }
 
-fn handle_message(nes: &mut NES, gui: &mut Gui, message: Message) -> bool {
+fn handle_message(
+    nes: &mut NES,
+    gui: &mut Gui,
+    target_time: &mut Duration,
+    message: Message,
+) -> bool {
     match message {
         Message::Input(id, input) => {
             if let Err(e) = nes.input(id, input) {
@@ -160,6 +166,10 @@ fn handle_message(nes: &mut NES, gui: &mut Gui, message: Message) -> bool {
         Message::ResizeWindow(width, height) => gui.resize(width, height),
         Message::DrawFrame => gui.redraw(),
         Message::ChangePaletteId(id) => nes.set_debug_palette_id(id).unwrap(),
+        Message::ChangeEmulationSpeed(s) => {
+            *target_time =
+                Duration::from_micros((nes.get_one_frame_duration().as_micros() as f64 / s) as u64)
+        }
         Message::ToggleDebugWindow => gui.toggle_debugging(),
         Message::CloseApp => {
             if nes.save().is_ok() {

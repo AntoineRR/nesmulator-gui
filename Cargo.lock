@@ -741,16 +741,9 @@ dependencies = [
 [[package]]
 name = "nesmulator_core"
 version = "0.1.0"
-source = "git+https://github.com/AntoineRR/nesmulator-core#47900e5f78a168c503d4dd434f21e8f0ff412f1e"
+source = "git+https://github.com/AntoineRR/nesmulator-core#3ad43717d05a5e865660225b59b44c452758834c"
 dependencies = [
- "clap",
- "env_logger",
  "log",
- "pixels",
- "sdl2",
- "spin_sleep",
- "winit",
- "winit_input_helper",
 ]
 
 [[package]]

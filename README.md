@@ -58,14 +58,14 @@ OPTIONS:
 
 ### Emulator features
 
-| Feature              | Key        |
-| -------------------- | ---------- |
-| Debugging mode       | E          |
-| Choose debug palette | Left/Right |
-| Reset CPU            | R          |
+| Feature                 | Key        |
+| ----------------------- | ---------- |
+| Debugging mode          | E          |
+| Choose debug palette    | Left/Right |
+| Control emulation speed | Up/down    |
+| Reset CPU               | R          |
 
 ## To do
 
 * Add a configuration file
 * Improve sound quality
-* Map controls to speed up emulation
