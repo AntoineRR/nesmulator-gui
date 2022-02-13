@@ -13,13 +13,13 @@ const DEBUG_WINDOW_WIDTH: u32 = 256;
 const DEBUG_WINDOW_HEIGHT: u32 = 240 + 2 + 128 + 2 + 6; // From top to bottom: main window | pattern table | palette
 
 #[derive(Debug)]
-pub struct GUI {
+pub struct Gui {
     main_window: Window,
     main_pixels: Pixels,
     pub debug: bool,
 }
 
-impl GUI {
+impl Gui {
     pub fn new(main_event_loop: &EventLoop<()>) -> Self {
         let window_size = LogicalSize::new(MAIN_WINDOW_WIDTH * 2, MAIN_WINDOW_HEIGHT * 2);
         let buffer_size = LogicalSize::new(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -35,7 +35,7 @@ impl GUI {
         let main_pixels =
             Pixels::new(buffer_size.width, buffer_size.height, surface_texture).unwrap();
 
-        GUI {
+        Gui {
             main_window,
             main_pixels,
             debug: false,
@@ -71,8 +71,8 @@ impl GUI {
     }
 
     fn add_separation(&mut self, buffer: &mut [ARGBColor]) {
-        for i in 0..512 {
-            buffer[i] = ARGBColor::light_gray();
+        for c in buffer.iter_mut() {
+            *c = ARGBColor::light_gray();
         }
     }
 

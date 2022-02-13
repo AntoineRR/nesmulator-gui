@@ -151,7 +151,7 @@ fn main() {
 }
 
 fn send_message(tx: &mpsc::Sender<Message>, message: Message, control_flow: &mut ControlFlow) {
-    if let Err(_) = tx.send(message) {
+    if tx.send(message).is_err() {
         error!("Receiving thread 'run_nes' panicked");
         *control_flow = ControlFlow::Exit;
         exit(1);

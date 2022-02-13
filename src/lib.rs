@@ -9,7 +9,7 @@ use nesmulator_core::{nes::NES, Config};
 use sdl2::audio::AudioSpecDesired;
 use winit::event_loop::EventLoop;
 
-use crate::gui::GUI;
+use crate::gui::Gui;
 
 mod gui;
 
@@ -40,18 +40,18 @@ pub fn run(nes_config: NESConfig, event_loop: &EventLoop<()>, rx: Receiver<Messa
 
     init_env_logger(nes_config.debug_level);
 
-    let mut gui = GUI::new(&event_loop);
+    let mut gui = Gui::new(event_loop);
 
     // Instantiate a NES and connect a ROM file
     let mut nes = NES::from_config(config);
-    if let Err(e) = nes.insert_cartdrige(&nes_config.rom_path) {
+    if let Err(e) = nes.insert_cartdrige(nes_config.rom_path) {
         error!("Error parsing ROM: {}", e);
         exit(1);
     }
     info!("ROM {} successfully loaded.", nes_config.rom_path);
 
     // Load a save for the current cartridge, if any
-    if let Ok(_) = nes.load_save() {
+    if nes.load_save().is_ok() {
         info!("Save successfully loaded.");
     }
 
@@ -85,7 +85,7 @@ fn init_env_logger(debug_level: Option<&str>) {
     .init();
 }
 
-fn run_nes(nes: &mut NES, gui: &mut GUI, rx: Receiver<Message>) {
+fn run_nes(nes: &mut NES, gui: &mut Gui, rx: Receiver<Message>) {
     info!("Running NES emulation...");
 
     // Sound
@@ -148,7 +148,7 @@ fn run_nes(nes: &mut NES, gui: &mut GUI, rx: Receiver<Message>) {
     }
 }
 
-fn handle_message(nes: &mut NES, gui: &mut GUI, message: Message) -> bool {
+fn handle_message(nes: &mut NES, gui: &mut Gui, message: Message) -> bool {
     match message {
         Message::Input(id, input) => {
             if let Err(e) = nes.input(id, input) {
@@ -162,11 +162,11 @@ fn handle_message(nes: &mut NES, gui: &mut GUI, message: Message) -> bool {
         Message::ChangePaletteId(id) => nes.set_debug_palette_id(id).unwrap(),
         Message::ToggleDebugWindow => gui.toggle_debugging(),
         Message::CloseApp => {
-            if let Ok(_) = nes.save() {
+            if nes.save().is_ok() {
                 info!("Game successfully saved.");
             }
             return false;
         }
     }
-    return true;
+    true
 }
