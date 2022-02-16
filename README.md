@@ -41,6 +41,9 @@ OPTIONS:
     -V, --version           Print version information
 ```
 
+The debug level must be between 1 and 4.
+The palette configuration file can be generated [here](https://bisqwit.iki.fi/utils/nespalette.php).
+
 ## Controls
 
 ### Controller mapping

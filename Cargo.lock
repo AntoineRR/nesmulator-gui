@@ -741,7 +741,7 @@ dependencies = [
 [[package]]
 name = "nesmulator_core"
 version = "0.1.0"
-source = "git+https://github.com/AntoineRR/nesmulator-core#3ad43717d05a5e865660225b59b44c452758834c"
+source = "git+https://github.com/AntoineRR/nesmulator-core#2b2fd2cf994e69de72fad05fe84e5a5786a637e3"
 dependencies = [
  "log",
 ]
