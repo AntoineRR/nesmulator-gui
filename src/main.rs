@@ -1,7 +1,7 @@
 use std::process::exit;
 use std::sync::mpsc;
 
-use clap::{App, Arg};
+use clap::{Command, Arg};
 use log::{error, info};
 use nesmulator_core::utils::ControllerInput;
 use nesmulator_gui::{run, Message, NESConfig};
@@ -11,7 +11,7 @@ use winit_input_helper::WinitInputHelper;
 
 fn main() {
     // CLI creation
-    let matches = App::new("Nesmulator")
+    let matches = Command::new("Nesmulator")
         .version("0.1.0")
         .author("AntoineRR")
         .about("nesmulator-gui - CLI to launch a GUI based on the nesmulator-core crate")
