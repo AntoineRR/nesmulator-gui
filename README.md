@@ -38,6 +38,7 @@ OPTIONS:
     -h, --help              Print help information
     -l, --log               Display the CPU logs to the console
     -p, --palette <FILE>    Sets a palette from a .pal file
+    -s, --state <FILE>      Specify a .data state file to load in the emulator
     -V, --version           Print version information
 ```
 
@@ -66,6 +67,7 @@ The palette configuration file can be generated [here](https://bisqwit.iki.fi/ut
 | Debugging mode          | E          |
 | Choose debug palette    | Left/Right |
 | Control emulation speed | Up/down    |
+| Save current state      | M          |
 | Reset CPU               | R          |
 
 ## To do

@@ -1,7 +1,8 @@
+use std::path::Path;
 use std::process::exit;
 use std::sync::mpsc;
 
-use clap::{Command, Arg};
+use clap::{Arg, Command};
 use log::{error, info};
 use nesmulator_core::utils::ControllerInput;
 use nesmulator_gui::{run, Message, NESConfig};
@@ -45,10 +46,19 @@ fn main() {
                 .takes_value(true)
                 .help("Sets a palette from a .pal file"),
         )
+        .arg(
+            Arg::new("state")
+                .short('s')
+                .long("state")
+                .value_name("FILE")
+                .takes_value(true)
+                .help("Specify a .data state file to load in the emulator"),
+        )
         .get_matches();
 
     // Get all configuration informations
     let palette_path = matches.value_of("palette");
+    let state_path = matches.value_of("state");
     let display_cpu_logs = matches.is_present("log");
     let debug_level = matches.value_of("debug");
     let rom_path = matches.value_of("game").unwrap();
@@ -61,6 +71,7 @@ fn main() {
         NESConfig {
             rom_path,
             palette_path,
+            state_path,
             debug_level,
             display_cpu_logs,
         },
@@ -71,6 +82,13 @@ fn main() {
     // Run the event loop
     let mut palette_id = 0;
     let mut speed = 1.0;
+    let path_to_rom = Path::new(rom_path);
+    let path_to_state = path_to_rom
+        .parent()
+        .unwrap()
+        .join(path_to_rom.file_stem().unwrap())
+        .with_extension("data");
+    let state_path = String::from(path_to_state.to_str().unwrap());
     let mut input_helper = WinitInputHelper::new();
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
@@ -120,6 +138,7 @@ fn main() {
                 }
                 send_message(&tx, Message::ChangePaletteId(palette_id), control_flow);
             }
+            // Change emulation speed
             if input_helper.key_pressed(VirtualKeyCode::Up) {
                 speed += 0.5;
                 send_message(&tx, Message::ChangeEmulationSpeed(speed), control_flow);
@@ -127,6 +146,10 @@ fn main() {
             if input_helper.key_pressed(VirtualKeyCode::Down) {
                 speed -= 0.5;
                 send_message(&tx, Message::ChangeEmulationSpeed(speed), control_flow);
+            }
+            // Save state
+            if input_helper.key_pressed(VirtualKeyCode::M) {
+                send_message(&tx, Message::SaveState(state_path.clone()), control_flow);
             }
             // Controller inputs
             let mut input = 0;
