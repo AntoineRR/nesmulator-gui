@@ -135,9 +135,9 @@ checksum = "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e"
 
 [[package]]
 name = "clap"
-version = "3.1.0"
+version = "3.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5f1fea81f183005ced9e59cdb01737ef2423956dac5a6d731b06b2ecfaa3467"
+checksum = "6d76c22c9b9b215eeb8d016ad3a90417bd13cb24cf8142756e6472445876cab7"
 dependencies = [
  "atty",
  "bitflags",
@@ -794,7 +794,7 @@ dependencies = [
 [[package]]
 name = "nesmulator_core"
 version = "0.1.0"
-source = "git+https://github.com/AntoineRR/nesmulator-core#f5b455ff5ca83c9a06fe2c1d309f8efe5ba2283a"
+source = "git+https://github.com/AntoineRR/nesmulator-core#f29212d89504fbd4c3ed6f8f77eec18440d799b8"
 dependencies = [
  "log",
  "serde",

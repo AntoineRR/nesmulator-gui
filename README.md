@@ -23,6 +23,8 @@ $ cd nesmulator-gui
 $ cargo run --release -- <OPTIONS> <PATH_TO_ROM>
 ```
 
+To compile the project on Windows, you should follow the instructions [here](https://rustrepo.com/repo/AngryLawyer-rust-sdl2#windows-msvc) to make SDL2 (used for the sound) work.
+
 To display the available options:
 
 ```
