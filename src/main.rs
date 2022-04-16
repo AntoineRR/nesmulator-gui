@@ -48,20 +48,46 @@ fn main() {
         )
         .arg(
             Arg::new("state")
-                .short('s')
+                .short('m')
                 .long("state")
                 .value_name("FILE")
                 .takes_value(true)
                 .help("Specify a .data state file to load in the emulator"),
         )
+        .arg(
+            Arg::new("save")
+                .short('s')
+                .long("save")
+                .value_name("FILE")
+                .takes_value(true)
+                .help("Specify a .sav file to load in the emulator. This works for games that originally provided a save system."),
+        )
         .get_matches();
 
     // Get all configuration informations
+    let rom_path = matches.value_of("game").unwrap();
+    let path_to_rom = Path::new(rom_path);
+    let path_to_rom = path_to_rom
+        .parent()
+        .unwrap()
+        .join(path_to_rom.file_stem().unwrap())
+        .with_extension("data");
+
+    let (state_path, load_state) = match matches.value_of("state") {
+        Some(path) => (String::from(path), true),
+        None => (
+            String::from(path_to_rom.with_extension("data").to_str().unwrap()),
+            false,
+        ),
+    };
+    let save_path = match matches.value_of("save") {
+        Some(path) => String::from(path),
+        None => String::from(path_to_rom.with_extension("sav").to_str().unwrap()),
+    };
+
     let palette_path = matches.value_of("palette");
-    let state_path = matches.value_of("state");
     let display_cpu_logs = matches.is_present("log");
     let debug_level = matches.value_of("debug");
-    let rom_path = matches.value_of("game").unwrap();
 
     // Create the GUI for displaying the graphics
     let event_loop = EventLoop::new();
@@ -71,7 +97,9 @@ fn main() {
         NESConfig {
             rom_path,
             palette_path,
-            state_path,
+            state_path: &state_path,
+            load_state,
+            save_path: &save_path,
             debug_level,
             display_cpu_logs,
         },
@@ -82,13 +110,6 @@ fn main() {
     // Run the event loop
     let mut palette_id = 0;
     let mut speed = 1.0;
-    let path_to_rom = Path::new(rom_path);
-    let path_to_state = path_to_rom
-        .parent()
-        .unwrap()
-        .join(path_to_rom.file_stem().unwrap())
-        .with_extension("data");
-    let state_path = String::from(path_to_state.to_str().unwrap());
     let mut input_helper = WinitInputHelper::new();
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
@@ -150,6 +171,10 @@ fn main() {
             // Save state
             if input_helper.key_pressed(VirtualKeyCode::M) {
                 send_message(&tx, Message::SaveState(state_path.clone()), control_flow);
+            }
+            // Save game as in the original NES
+            if input_helper.key_pressed(VirtualKeyCode::L) {
+                send_message(&tx, Message::Save(save_path.clone()), control_flow);
             }
             // Controller inputs
             let mut input = 0;

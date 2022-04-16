@@ -25,6 +25,7 @@ pub enum Message {
     ChangePaletteId(u8),
     ChangeEmulationSpeed(f64),
     SaveState(String),
+    Save(String),
     ResizeWindow(u32, u32),
     ToggleDebugWindow,
     CloseApp,
@@ -33,7 +34,9 @@ pub enum Message {
 pub struct NESConfig<'a> {
     pub rom_path: &'a str,
     pub palette_path: Option<&'a str>,
-    pub state_path: Option<&'a str>,
+    pub save_path: &'a str,
+    pub state_path: &'a str,
+    pub load_state: bool,
     pub debug_level: Option<&'a str>,
     pub display_cpu_logs: bool,
 }
@@ -47,12 +50,12 @@ pub fn run(nes_config: NESConfig, event_loop: &EventLoop<()>, rx: Receiver<Messa
 
     // Instantiate a NES and connect a ROM file
     let mut nes = NES::from_config(config);
-    if let Some(p) = nes_config.state_path {
-        if let Err(e) = nes.load_state(p, nes_config.rom_path) {
+    if nes_config.load_state {
+        if let Err(e) = nes.load_state(&nes_config.state_path, nes_config.rom_path) {
             error!("Error parsing state: {}", e);
             exit(1);
         }
-        info!("State {} successfully loaded.", p);
+        info!("State {} successfully loaded.", nes_config.state_path);
     } else if let Err(e) = nes.insert_cartdrige(nes_config.rom_path) {
         error!("Error parsing ROM: {}", e);
         exit(1);
@@ -60,7 +63,7 @@ pub fn run(nes_config: NESConfig, event_loop: &EventLoop<()>, rx: Receiver<Messa
     info!("ROM {} successfully loaded.", nes_config.rom_path);
 
     // Load a save for the current cartridge, if any
-    if nes.load_save().is_ok() {
+    if nes.load_save(nes_config.save_path).is_ok() {
         info!("Save successfully loaded.");
     }
 
@@ -181,16 +184,19 @@ fn handle_message(
         Message::SaveState(path) => {
             if let Err(e) = nes.save_state(&path) {
                 error!("Failed to save the emulator state: {}", e);
-                exit(1);
             } else {
                 info!("State successfully saved.");
             }
         }
+        Message::Save(path) => {
+            if let Err(e) = nes.save(&path) {
+                error!("Failed to save the game: {}", e);
+            } else {
+                info!("Game successfully saved at {}.", path);
+            }
+        }
         Message::ToggleDebugWindow => gui.toggle_debugging(),
         Message::CloseApp => {
-            if nes.save().is_ok() {
-                info!("Game successfully saved.");
-            }
             return false;
         }
     }

@@ -28,7 +28,8 @@ To compile the project on Windows, you should follow the instructions [here](htt
 To display the available options:
 
 ```
-$ cargo run --release --help
+$ cargo run --release -- --help
+
 USAGE:
     nesmulator-gui [OPTIONS] <FILE>
 
@@ -39,8 +40,9 @@ OPTIONS:
     -d, --debug <INT>       Turn debugging information on
     -h, --help              Print help information
     -l, --log               Display the CPU logs to the console
+    -m, --state <FILE>      Specify a .data state file to load in the emulator
     -p, --palette <FILE>    Sets a palette from a .pal file
-    -s, --state <FILE>      Specify a .data state file to load in the emulator
+    -s, --save <FILE>       Specify a .sav file to load in the emulator. This works for games that originally provided a save system.
     -V, --version           Print version information
 ```
 
@@ -70,7 +72,10 @@ The palette configuration file can be generated [here](https://bisqwit.iki.fi/ut
 | Choose debug palette    | Left/Right |
 | Control emulation speed | Up/down    |
 | Save current state      | M          |
+| Save game               | L          |
 | Reset CPU               | R          |
+
+There is a difference between saving the state of the emulator and the game. Saving the state will let you restart the game exactly where you stopped it, while saving the game will work as in the original NES (you first have to save in game, then press the save button on the emulator).
 
 ## To do
 
